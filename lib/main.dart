@@ -4,6 +4,7 @@ import 'package:setnis/additemdetails.dart';
 import 'package:setnis/availableevents.dart';
 import 'package:setnis/login.dart';
 import 'package:setnis/model/appstate.dart';
+import 'package:setnis/model/itemsmodel.dart';
 import 'package:setnis/model/positionmodel.dart';
 import 'package:setnis/read.dart';
 import 'package:setnis/additem.dart';
@@ -22,6 +23,7 @@ class SETNISApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(builder: (_) => AppStateModel()),
           ChangeNotifierProvider(builder: (_) => PositionModel()),
+          ChangeNotifierProvider(builder: (_) => ItemsModel()),
         ],
         child: MaterialApp(
             title: 'SET NIS',
@@ -120,7 +122,9 @@ class _SETNISHomePageState extends State<SETNISHomePage> {
                       ),
                     ],
                   ),
-                )
+                ),
+                Text(Provider.of<ItemsModel>(context).items.length.toString() +
+                    " kohdetta tallennettu"),
               ],
             ),
           );

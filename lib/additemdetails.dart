@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:latlong/latlong.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,10 +10,15 @@ import "package:collection/collection.dart";
 
 import 'dart:developer' as developer;
 
+import 'package:setnis/model/itemsmodel.dart';
+
 class AddItemDetailsRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final LatLng itemPosition = ModalRoute.of(context).settings.arguments;
+    final LatLng itemPosition = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
     return Scaffold(
       appBar: AppBar(
         title: Text("Kohteen tiedot"),
@@ -35,8 +42,8 @@ class ItemDetailsForm extends StatefulWidget {
 String formatToDMM(double coordinate) {
   String degrees = coordinate.truncate().toString();
   String minutes = (((coordinate - coordinate.truncate()) * 60) *
-          100.truncateToDouble() /
-          100)
+      100.truncateToDouble() /
+      100)
       .toStringAsFixed(3);
 
   return '$degrees° $minutes"';
@@ -62,30 +69,37 @@ class ItemDetailsFormState extends State<ItemDetailsForm> {
   void initState() {
     super.initState();
     _item.info = InventoryItem();
-
+    _item.lat = widget.itemPosition.latitude;
+    _item.lon = widget.itemPosition.longitude;
   }
 
   InventoryItem getCurrentSelectedItem() {
-    final currentNetwork = Provider.of<AppStateModel>(context).currentNetwork;
+    final currentNetwork = Provider
+        .of<AppStateModel>(context)
+        .currentNetwork;
     final inventory = currentNetwork.inventory;
 
-    return inventory.firstWhere((item) => item.vendor == selectedVendor && item.type == selectedType && item.model == selectedModel,orElse: () => null);
-
+    return inventory.firstWhere((item) =>
+    item.vendor == selectedVendor && item.type == selectedType &&
+        item.model == selectedModel, orElse: () => null);
   }
 
   bool selectedModelIsLine() {
     var currentSelection = getCurrentSelectedItem();
-    return currentSelection != null && currentSelection.itemtype == ItemType.LINE;
+    return currentSelection != null &&
+        currentSelection.itemtype == ItemType.LINE;
   }
 
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
-    final currentNetwork = Provider.of<AppStateModel>(context).currentNetwork;
+    final currentNetwork = Provider
+        .of<AppStateModel>(context)
+        .currentNetwork;
     final inventory = currentNetwork.inventory;
 
     var inventoryByVendor =
-        groupBy(inventory, (InventoryItem item) => item.vendor);
+    groupBy(inventory, (InventoryItem item) => item.vendor);
     var typesByVendor = mapMap(inventoryByVendor,
         key: (String k, _) => k,
         value: (String k, List<InventoryItem> items) =>
@@ -128,12 +142,12 @@ class ItemDetailsFormState extends State<ItemDetailsForm> {
             value: selectedType,
             items: selectedVendor != null
                 ? typesByVendor[selectedVendor]
-                    .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList()
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList()
                 : null,
             onChanged: (String val) {
               setState(() {
@@ -156,14 +170,14 @@ class ItemDetailsFormState extends State<ItemDetailsForm> {
             value: selectedModel,
             items: selectedVendor != null && selectedType != null
                 ? inventoryByVendor[selectedVendor]
-                    .where((item) => item.type == selectedType)
-                    .map((item) => item.model)
-                    .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList()
+                .where((item) => item.type == selectedType)
+                .map((item) => item.model)
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList()
                 : null,
             onChanged: (String val) {
               setState(() {
@@ -179,8 +193,6 @@ class ItemDetailsFormState extends State<ItemDetailsForm> {
             onSaved: (String val) {
               selectedModel = val;
               _item.info = getCurrentSelectedItem();
-              _item.lat = widget.itemPosition.latitude;
-              _item.lon = widget.itemPosition.longitude;
               _item.parentNetwork = currentNetwork.uid;
             },
           ),
@@ -206,7 +218,13 @@ class ItemDetailsFormState extends State<ItemDetailsForm> {
                   // If the form is valid, display a Snackbar.
                   Scaffold.of(context)
                       .showSnackBar(SnackBar(content: Text('Tallennetaan')));
-
+                  Provider.of<ItemsModel>(context).addItems([_item].toList());
+                  Scaffold.of(context)
+                      .showSnackBar(SnackBar(content: Text('Tallennettu')));
+                  Timer(Duration(milliseconds: 1000), () {
+                    _item = Item();
+                    Navigator.popUntil(context, ModalRoute.withName('/'));
+                  });
                 }
               },
               child: Text('Tallenna'),
