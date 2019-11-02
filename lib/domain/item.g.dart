@@ -9,8 +9,7 @@ part of 'item.dart';
 Item _$ItemFromJson(Map<String, dynamic> json) {
   return Item(
     uid: json['uid'] as String,
-    parentNetwork:
-        Network.fromJson(json['parentNetwork'] as Map<String, dynamic>),
+    parentNetwork: json['parentNetwork'] as String,
     lat: (json['lat'] as num).toDouble(),
     lon: (json['lon'] as num).toDouble(),
     notes: json['notes'] as String,
@@ -31,8 +30,7 @@ LineItem _$LineItemFromJson(Map<String, dynamic> json) {
     toNode: Item.fromJson(json['toNode'] as Map<String, dynamic>),
   )
     ..uid = json['uid'] as String
-    ..parentNetwork =
-        Network.fromJson(json['parentNetwork'] as Map<String, dynamic>)
+    ..parentNetwork = json['parentNetwork'] as String
     ..lat = (json['lat'] as num).toDouble()
     ..lon = (json['lon'] as num).toDouble()
     ..notes = json['notes'] as String;

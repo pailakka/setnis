@@ -9,10 +9,60 @@ const EVENTS_MOCK_JSON = '''[{
 		"isActive": true,
 		"networks": [{
 			"uid": "n1",
-			"name": "Sähköverkko"
+			"name": "SähköverkkoA",
+			"inventory":[
+				{
+			    "itemtype":"POINT",
+			    "vendor":"PV",
+			    "type":"SVK",
+			    "model":"SVK 0.9"
+			  },
+			  {
+			    "itemtype":"POINT",
+			    "vendor":"PV",
+			    "type":"SVK",
+			    "model":"SVK 4.0"
+			  },
+			  {
+			    "itemtype":"POINT",
+			    "vendor":"PV",
+			    "type":"Keskus",
+			    "model":"HK"
+			  },
+			  {
+			    "itemtype":"LINE",
+			    "vendor":"PV",
+			    "type":"Jatkojohto",
+			    "model":"32A 50m"
+			  },
+			  {
+			    "itemtype":"LINE",
+			    "vendor":"PV",
+			    "type":"Jatkojohto",
+			    "model":"32A 25m"
+			  },
+			  {
+			    "itemtype":"LINE",
+			    "vendor":"SP",
+			    "type":"Jatkojohto",
+			    "model":"16A 10m"
+			  },
+			  {
+			    "itemtype":"LINE",
+			    "vendor":"SP",
+			    "type":"Jatkojohto",
+			    "model":"16A 20m"
+			  },
+			  {
+			    "itemtype":"POINT",
+			    "vendor":"SP",
+			    "type":"Keskus",
+			    "model":"2x16A 1x32A"
+			  }
+			]
 		}, {
 			"uid": "n2",
-			"name": "ICT"
+			"name": "ICTA"
 		}],
 		"bbox": [25, 60, 27, 61]
 	},
@@ -22,7 +72,8 @@ const EVENTS_MOCK_JSON = '''[{
 		"isActive": true,
 		"networks": [{
 			"uid": "n3",
-			"name": "Sähköverkko"
+			"name": "SähköverkkoB",
+			"inventory": []
 		}],
 		"bbox": [26, 61, 28, 62]
 	},
@@ -32,7 +83,8 @@ const EVENTS_MOCK_JSON = '''[{
 		"isActive": false,
 		"networks": [{
 			"uid": "n4",
-			"name": "Sähköverkko"
+			"name": "SähköverkkoC",
+			"inventory": []
 		}],
 		"bbox": [0, 0, 1, 1]
 	}

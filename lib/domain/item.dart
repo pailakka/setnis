@@ -1,18 +1,24 @@
 import 'package:json_annotation/json_annotation.dart';
-
-import 'event.dart';
+import 'package:setnis/domain/event.dart';
 
 part 'item.g.dart';
 
 @JsonSerializable(nullable: false)
 class Item {
   String uid;
-  Network parentNetwork;
+  String parentNetwork;
   double lat;
   double lon;
   String notes;
+  InventoryItem info;
 
-  Item({this.uid, this.parentNetwork, this.lat, this.lon, this.notes});
+  Item(
+      {this.uid,
+      this.parentNetwork,
+      this.lat,
+      this.lon,
+      this.notes,
+      this.info});
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
 

@@ -3,42 +3,63 @@ import 'package:provider/provider.dart';
 import 'package:setnis/domain/event.dart';
 import 'package:setnis/model/appstate.dart';
 
-var dropdownValue = "One";
-
 class AvailableEventsWidget extends StatelessWidget {
   AvailableEventsWidget({Key key, this.events}) : super(key: key);
   final List<Event> events;
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: events != null
-          ? DropdownButton<String>(
-              hint: Text("Valitse tapahtuma"),
-              value: Provider.of<AppStateModel>(context).currentEvent,
-              icon: Flexible(child: Icon(Icons.arrow_downward)),
-              iconSize: 24,
-              elevation: 16,
-              isDense: true,
-              style: TextStyle(color: Colors.black),
-              underline: Container(
-                height: 1,
-                color: Colors.grey,
-              ),
-              onChanged: (String newCurrentEvent) {
-                Provider.of<AppStateModel>(context)
-                    .setCurrentEvent(newCurrentEvent);
-              },
-              items: events
-                  .map((event) => event.name)
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            )
-          : Text("Ei tapahtumia"),
+    final currentEvent = Provider.of<AppStateModel>(context).currentEvent;
+    final currentNetwork = Provider.of<AppStateModel>(context).currentNetwork;
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              events != null
+                  ? DropdownButton<String>(
+                      hint: Text("Valitse tapahtuma"),
+                      value: currentEvent != null ? currentEvent.name : null,
+                      onChanged: (String newCurrentEvent) {
+                        Provider.of<AppStateModel>(context)
+                            .setCurrentEvent(newCurrentEvent);
+                      },
+                      items: events
+                          .map((event) => event.name)
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    )
+                  : Text("Ei tapahtumia"),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              currentEvent != null
+                  ? DropdownButton<String>(
+                      hint: Text("Valitse verkko"),
+                      value: currentNetwork != null ? currentNetwork.name : null,
+                      onChanged: (String newCurrentNetwork) {
+                        Provider.of<AppStateModel>(context)
+                            .setCurrentNetwork(newCurrentNetwork);
+                      },
+                      items: currentEvent.networks
+                          .map((Network net) => net.name)
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    )
+                  : Text("Ei tapahtumaa valittu"),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

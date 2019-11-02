@@ -7,13 +7,21 @@ class AppStateModel with ChangeNotifier {
   final EventService eventService = getEventService();
 
   bool _isLoggedIn = true;
-  String _currentEvent = "Tapahtuma 1";
+  String _currentEvent;
+  String _currentNetwork;
   List<Event> _events;
   bool _isLoading = false;
 
   bool get isLoggedIn => _isLoggedIn;
 
-  String get currentEvent => _currentEvent;
+  Event get currentEvent => events != null
+      ? events.firstWhere((Event e) => e.name == _currentEvent, orElse: () => null)
+      : null;
+
+  Network get currentNetwork => currentEvent != null
+      ? currentEvent.networks
+          .firstWhere((Network n) => n.name == _currentNetwork, orElse: () => null)
+      : null;
 
   List<Event> get events => _events;
 
@@ -26,6 +34,12 @@ class AppStateModel with ChangeNotifier {
 
   void setCurrentEvent(String newCurrentEvent) {
     _currentEvent = newCurrentEvent;
+    _currentNetwork = null;
+    notifyListeners();
+  }
+
+  void setCurrentNetwork(String newCurrentNetwork) {
+    _currentNetwork = newCurrentNetwork;
     notifyListeners();
   }
 
@@ -37,5 +51,4 @@ class AppStateModel with ChangeNotifier {
 
     notifyListeners();
   }
-
 }
