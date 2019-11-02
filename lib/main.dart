@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:setnis/additemdetails.dart';
 import 'package:setnis/availableevents.dart';
 import 'package:setnis/login.dart';
 import 'package:setnis/model/appstate.dart';
+import 'package:setnis/model/positionmodel.dart';
 import 'package:setnis/read.dart';
 import 'package:setnis/additem.dart';
 import 'package:setnis/services/loginservice.dart';
 
-
-void main(){
+void main() {
   return runApp(SETNISApp());
 }
 
@@ -20,16 +21,18 @@ class SETNISApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(builder: (_) => AppStateModel()),
+          ChangeNotifierProvider(builder: (_) => PositionModel()),
         ],
         child: MaterialApp(
             title: 'SET NIS',
-            theme: ThemeData(primarySwatch: Colors.green),
+            theme: ThemeData(primarySwatch: Colors.grey),
             initialRoute: '/',
             routes: {
               '/': (context) => SETNISHomePage(title: 'SET verkkotiedot'),
               '/login': (context) => LoginRoute(),
               '/read': (context) => ReadRoute(),
               '/additem': (context) => AddItemRoute(),
+              '/additem/details': (context) => AddItemDetailsRoute(),
               '/logout': (context) {
                 var appState = Provider.of<AppStateModel>(context);
                 var navi = Navigator.of(context);
@@ -128,92 +131,87 @@ class _SETNISHomePageState extends State<SETNISHomePage> {
 
   RaisedButton writeButton(BuildContext context) {
     return RaisedButton(
-                        child: Text('Lisää kohde'),
-                        onPressed:
-                            Provider.of<AppStateModel>(context).isLoggedIn &&
-                                Provider.of<AppStateModel>(context).currentEvent != null
-                                ? () {
-                                    Navigator.pushNamed(context, '/additem');
-                                  }
-                                : null,
-                      );
+      child: Text('Lisää kohde'),
+      onPressed: Provider.of<AppStateModel>(context).isLoggedIn &&
+              Provider.of<AppStateModel>(context).currentEvent != null
+          ? () {
+              Navigator.pushNamed(context, '/additem');
+            }
+          : null,
+    );
   }
 
   RaisedButton viewButton(BuildContext context) {
     return RaisedButton(
-                        child: Text(
-                          'Katselu',
-                        ),
-                        onPressed: Provider.of<AppStateModel>(context).currentEvent != null ? () {
-                          Navigator.pushNamed(context, '/read');
-                        } : null,
-                      );
+      child: Text(
+        'Katselu',
+      ),
+      onPressed: Provider.of<AppStateModel>(context).currentEvent != null
+          ? () {
+              Navigator.pushNamed(context, '/read');
+            }
+          : null,
+    );
   }
 
   Consumer<AppStateModel> loginButton(BuildContext context) {
     return Consumer<AppStateModel>(
-                        builder: (_, appState, __) => RaisedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                    context,
-                                    appState.isLoggedIn
-                                        ? '/logout'
-                                        : '/login');
-                              },
-                              child: Text(
-                                appState.isLoggedIn
-                                    ? 'Kirjaudu ulos'
-                                    : 'Kirjaudu sisään',
-                              ),
-                            ));
+        builder: (_, appState, __) => RaisedButton(
+              onPressed: () {
+                Navigator.pushNamed(
+                    context, appState.isLoggedIn ? '/logout' : '/login');
+              },
+              child: Text(
+                appState.isLoggedIn ? 'Kirjaudu ulos' : 'Kirjaudu sisään',
+              ),
+            ));
   }
 
   GestureDetector appBarViewAction(BuildContext context) {
     return GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, '/read');
-          },
-          child: Icon(
-            Icons.remove_red_eye,
-            color: Colors.white,
-            size: 24.0,
-            semanticLabel: 'Katsele tietoja',
-          ),
-        );
+      onTap: () {
+        Navigator.pushNamed(context, '/read');
+      },
+      child: Icon(
+        Icons.remove_red_eye,
+        color: Colors.white,
+        size: 24.0,
+        semanticLabel: 'Katsele tietoja',
+      ),
+    );
   }
 
   GestureDetector appBardEditAction(BuildContext context) {
     return GestureDetector(
-          onTap: this.userIsLoggedIn
-              ? () {
-                  Navigator.pushNamed(context, '/additem');
-                }
-              : null,
-          child: Icon(
-            Icons.add,
-            color: Provider.of<AppStateModel>(context).isLoggedIn
-                ? Colors.blue
-                : Colors.grey,
-            size: 24.0,
-            semanticLabel: 'Lisää tietoja',
-          ),
-        );
+      onTap: this.userIsLoggedIn
+          ? () {
+              Navigator.pushNamed(context, '/additem');
+            }
+          : null,
+      child: Icon(
+        Icons.add,
+        color: Provider.of<AppStateModel>(context).isLoggedIn
+            ? Colors.blue
+            : Colors.grey,
+        size: 24.0,
+        semanticLabel: 'Lisää tietoja',
+      ),
+    );
   }
 
   Consumer<AppStateModel> appBarLoginAction(BuildContext context) {
     return Consumer<AppStateModel>(
-            builder: (_, appState, __) => GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(
-                      context, appState.isLoggedIn ? '/logout' : '/login');
-                },
-                child: Icon(
-                  appState.isLoggedIn ? Icons.lock : Icons.lock_open,
-                  color: Colors.white,
-                  size: 24.0,
-                  semanticLabel: appState.isLoggedIn
-                      ? 'Kirjaudu ulos'
-                      : 'Kirjaudu sisään',
-                )));
+        builder: (_, appState, __) => GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(
+                  context, appState.isLoggedIn ? '/logout' : '/login');
+            },
+            child: Icon(
+              appState.isLoggedIn ? Icons.lock : Icons.lock_open,
+              color: Colors.white,
+              size: 24.0,
+              semanticLabel:
+                  appState.isLoggedIn ? 'Kirjaudu ulos' : 'Kirjaudu sisään',
+            )));
   }
 }

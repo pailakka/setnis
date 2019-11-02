@@ -54,7 +54,6 @@ class MockEventService implements EventService {
       List<dynamic> l = json.decode(EVENTS_MOCK_JSON);
       return l.map((o) => Event.fromJson(o)).toList();
     });
-    throw UnimplementedError("Login service not yet implemented");
   }
 }
 

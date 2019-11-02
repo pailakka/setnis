@@ -6,8 +6,8 @@ import 'package:setnis/services/eventservice.dart';
 class AppStateModel with ChangeNotifier {
   final EventService eventService = getEventService();
 
-  bool _isLoggedIn = false;
-  String _currentEvent;
+  bool _isLoggedIn = true;
+  String _currentEvent = "Tapahtuma 1";
   List<Event> _events;
   bool _isLoading = false;
 
